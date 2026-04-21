@@ -1,0 +1,247 @@
+---
+title: "DATASCI 350 Final Project: World Bank Development Indicators Analysis"
+format:
+  html:
+    theme: cosmo
+    toc: true
+    toc-depth: 2
+  pdf:
+    toc: true
+    toc-depth: 2
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+# Project Title
+
+**Project Members:**
+- Member 1 (Emory ID: )
+- Member 2 (Emory ID: )
+- Member 3 (Emory ID: )
+- Member 4 (Emory ID: )
+
+---
+
+## Introduction
+
+Provide a clear description of your research topic and research questions. Briefly explain why this topic is important and what you hope to discover through your analysis. Include context from existing literature or known facts about your chosen topic (Economic Development, Population Dynamics, or Education).
+
+### Research Questions
+
+- Research Question 1: ?
+- Research Question 2: ?
+- Research Question 3: ?
+
+---
+
+## Data Description
+
+### Dataset Overview
+
+Describe the World Bank World Development Indicators (WDI) dataset you selected. Include:
+- The specific indicators you chose and why
+- The countries or regions included in your analysis
+- The time period covered
+- Any data limitations or considerations
+
+### Key Variables
+
+Present a summary table of your key variables:
+
+```{python}
+# Load libraries
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Set plot style
+sns.set_style("whitegrid")
+plt.rcParams['figure.figsize'] = (12, 6)
+
+# Load your data here
+# Example: df = pd.read_csv("../data/wdi_data.csv")
+
+# Display data overview
+# print(df.head())
+# print(df.info())
+# print(df.describe())
+```
+
+### Data Cleaning and Pre-processing
+
+Describe the data cleaning steps performed:
+
+```{python}
+# Data cleaning steps
+# - Handle missing values
+# - Remove duplicates
+# - Convert data types
+# - Merge datasets if needed
+
+# Example cleaning operations:
+# df = df.dropna()
+# df['year'] = pd.to_datetime(df['year'])
+# df = df.sort_values(['country', 'year'])
+```
+
+---
+
+## Data Analysis
+
+### Exploratory Data Analysis
+
+Analyze the distribution and relationships in your data:
+
+```{python}
+# EDA - Univariate Analysis
+# Create visualizations for individual variables
+
+# Example:
+# plt.figure(figsize=(12, 4))
+# plt.subplot(1, 3, 1)
+# df['variable1'].hist(bins=30)
+# plt.title('Distribution of Variable 1')
+# plt.xlabel('Value')
+# plt.ylabel('Frequency')
+# plt.show()
+```
+
+### Trend Analysis Over Time
+
+Examine how your indicators have changed over time:
+
+```{python}
+# Time series analysis
+# Analyze trends in your selected indicators
+
+# Example:
+# plt.figure(figsize=(14, 6))
+# for country in df['country'].unique()[:5]:
+#     country_data = df[df['country'] == country]
+#     plt.plot(country_data['year'], country_data['indicator1'], label=country)
+# plt.xlabel('Year')
+# plt.ylabel('Indicator Value')
+# plt.title('Trend Analysis: Indicator 1 Over Time')
+# plt.legend()
+# plt.show()
+```
+
+### Relationship Analysis
+
+Explore relationships between your indicators:
+
+```{python}
+# Correlation analysis
+# df_numeric = df.select_dtypes(include=[np.number])
+# correlation_matrix = df_numeric.corr()
+
+# Visualization
+# plt.figure(figsize=(10, 8))
+# sns.heatmap(correlation_matrix, annot=True, fmt='.2f', cmap='coolwarm')
+# plt.title('Correlation Matrix of Indicators')
+# plt.show()
+```
+
+### Regional/Country Comparisons
+
+Compare your indicators across countries or regions:
+
+```{python}
+# Comparative analysis
+# Group and summarize data by country/region
+
+# Example:
+# summary_stats = df.groupby('country')[['indicator1', 'indicator2']].agg(['mean', 'std', 'min', 'max'])
+# print(summary_stats)
+
+# Visualization
+# df_latest = df[df['year'] == df['year'].max()]
+# plt.figure(figsize=(12, 6))
+# df_latest.sort_values('indicator1', ascending=False).head(10).plot(
+#     x='country', y='indicator1', kind='bar'
+# )
+# plt.title('Top 10 Countries by Indicator 1 (Most Recent Year)')
+# plt.ylabel('Indicator Value')
+# plt.xlabel('Country')
+# plt.xticks(rotation=45)
+# plt.tight_layout()
+# plt.show()
+```
+
+---
+
+## Results and Discussion
+
+### Main Findings
+
+Present your key findings in this section. Include both statistical results and interpretations:
+
+```{python}
+# Summary statistics and key metrics
+# Calculate and display main findings
+
+# Example:
+# print("Average Indicator 1:")
+# print(df.groupby('country')['indicator1'].mean().sort_values(ascending=False))
+
+# Statistical tests (if applicable)
+# from scipy import stats
+# correlation = df['indicator1'].corr(df['indicator2'])
+# print(f"Correlation between Indicator 1 and 2: {correlation:.3f}")
+```
+
+### Visualizations
+
+Present well-formatted tables and plots of your results:
+
+```{python}
+# Create summary tables
+# results_df = pd.DataFrame({
+#     'Metric': ['Mean', 'Median', 'Std Dev'],
+#     'Indicator 1': [df['indicator1'].mean(), df['indicator1'].median(), df['indicator1'].std()],
+#     'Indicator 2': [df['indicator2'].mean(), df['indicator2'].median(), df['indicator2'].std()]
+# })
+# print(results_df)
+
+# Create publication-ready figures
+# fig, axes = plt.subplots(2, 2, figsize=(14, 10))
+#
+# # Plot 1
+# axes[0, 0].scatter(df['indicator1'], df['indicator2'])
+# axes[0, 0].set_title('Relationship between Indicator 1 and 2')
+#
+# # Add more plots...
+# plt.tight_layout()
+# plt.show()
+```
+
+### Interpretation
+
+Interpret your results in the context of your research questions:
+
+- **Finding 1:** Explain what this result means and why it is important
+- **Finding 2:** Connect this finding to your research objectives
+- **Finding 3:** Discuss any unexpected or noteworthy patterns
+
+---
+
+## Conclusion
+
+Summarize your main findings and their implications. Address:
+
+1. **Summary of Key Results:** Briefly restate your main findings
+2. **Contribution:** How does this analysis contribute to understanding your chosen topic?
+3. **Limitations:** What are the limitations of your analysis? (data quality, time period, countries covered, etc.)
+4. **Future Research:** What questions remain unanswered? What would you investigate next?
+
+---
+
+## References
+
+Add your references here in a consistent format (APA, Chicago, or your preferred style).
+
+- World Bank. (2023). World Development Indicators. Retrieved from https://data.worldbank.org/products/wdi
+- Add more references as needed
