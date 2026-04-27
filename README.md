@@ -4,6 +4,9 @@ Vicente Martinez, Theo Burns, Saahil Mardhekar, Arush Singhania
 ## Overview
 World Bank World Development Indicators analysis project for DATASCI 350.
 
+## View the Report
+📊 **[View the interactive HTML report](https://vicentem15.github.io/datasci350-final-project/report.html)**
+
 ## Setup Instructions
 
 ### 1. Clone the Repository
