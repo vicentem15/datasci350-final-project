@@ -1,4 +1,5 @@
 # DATASCI 350 Final Project
+Vicente Martinez, Theo Burns, Saahil Mardhekar, Arush Singhania
 
 ## Overview
 World Bank World Development Indicators analysis project for DATASCI 350.
