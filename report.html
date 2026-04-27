@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>DATASCI 350 Final Project: World Bank Development Indicators Analysis</title>
+<title>Government System Type and Education Enrollment in Africa</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -58,7 +58,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="report_files/libs/clipboard/clipboard.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="report_files/libs/clipboard/clipboard.min.js"></script>
 <script src="report_files/libs/quarto-html/quarto.js" type="module"></script>
 <script src="report_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="report_files/libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -70,6 +70,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="report_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="report_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="report_files/libs/bootstrap/bootstrap-a74871fe4945b66d259aafc266475145.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
 </head>
@@ -82,15 +85,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul class="collapse">
-  <li><a href="#project-title" id="toc-project-title" class="nav-link active" data-scroll-target="#project-title">Project Title</a>
-  <ul class="collapse">
-  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
   <li><a href="#data-description" id="toc-data-description" class="nav-link" data-scroll-target="#data-description">Data Description</a></li>
-  <li><a href="#data-analysis" id="toc-data-analysis" class="nav-link" data-scroll-target="#data-analysis">Data Analysis</a></li>
-  <li><a href="#results-and-discussion" id="toc-results-and-discussion" class="nav-link" data-scroll-target="#results-and-discussion">Results and Discussion</a></li>
-  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
-  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  <li><a href="#setup" id="toc-setup" class="nav-link" data-scroll-target="#setup">Setup</a></li>
+  <li><a href="#load-data" id="toc-load-data" class="nav-link" data-scroll-target="#load-data">Load Data</a></li>
+  <li><a href="#data-cleaning" id="toc-data-cleaning" class="nav-link" data-scroll-target="#data-cleaning">Data Cleaning</a></li>
+  <li><a href="#sql-descriptive-statistics" id="toc-sql-descriptive-statistics" class="nav-link" data-scroll-target="#sql-descriptive-statistics">SQL Descriptive Statistics</a></li>
+  <li><a href="#exploratory-analysis" id="toc-exploratory-analysis" class="nav-link" data-scroll-target="#exploratory-analysis">Exploratory Analysis</a>
+  <ul class="collapse">
+  <li><a href="#enrollment-distribution-by-government-system-type" id="toc-enrollment-distribution-by-government-system-type" class="nav-link" data-scroll-target="#enrollment-distribution-by-government-system-type">Enrollment Distribution by Government System Type</a></li>
   </ul></li>
+  <li><a href="#time-trends-since-2010" id="toc-time-trends-since-2010" class="nav-link" data-scroll-target="#time-trends-since-2010">Time Trends Since 2010</a>
+  <ul class="collapse">
+  <li><a href="#primary-enrollment-trends" id="toc-primary-enrollment-trends" class="nav-link" data-scroll-target="#primary-enrollment-trends">Primary Enrollment Trends</a></li>
+  <li><a href="#secondary-enrollment-trends" id="toc-secondary-enrollment-trends" class="nav-link" data-scroll-target="#secondary-enrollment-trends">Secondary Enrollment Trends</a></li>
+  <li><a href="#tertiary-enrollment-trends" id="toc-tertiary-enrollment-trends" class="nav-link" data-scroll-target="#tertiary-enrollment-trends">Tertiary Enrollment Trends</a></li>
+  </ul></li>
+  <li><a href="#additional-summary-tables" id="toc-additional-summary-tables" class="nav-link" data-scroll-target="#additional-summary-tables">Additional Summary Tables</a></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a></li>
+  <li><a href="#limitations" id="toc-limitations" class="nav-link" data-scroll-target="#limitations">Limitations</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  <li><a href="#group-contributions" id="toc-group-contributions" class="nav-link" data-scroll-target="#group-contributions">Group Contributions</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
 <div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="report.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
 </div>
@@ -98,7 +114,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">DATASCI 350 Final Project: World Bank Development Indicators Analysis</h1>
+<h1 class="title">Government System Type and Education Enrollment in Africa</h1>
+<p class="subtitle lead">A World Bank Education Enrollment Analysis</p>
 </div>
 
 
@@ -115,223 +132,848 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="project-title" class="level1">
-<h1>Project Title</h1>
-<p><strong>Project Members:</strong> - Member 1 (Emory ID: ) - Member 2 (Emory ID: ) - Member 3 (Emory ID: ) - Member 4 (Emory ID: )</p>
-<hr>
-<section id="introduction" class="level2">
-<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>Provide a clear description of your research topic and research questions. Briefly explain why this topic is important and what you hope to discover through your analysis. Include context from existing literature or known facts about your chosen topic (Economic Development, Population Dynamics, or Education).</p>
-<section id="research-questions" class="level3">
-<h3 class="anchored" data-anchor-id="research-questions">Research Questions</h3>
-<ul>
-<li>Research Question 1: ?</li>
-<li>Research Question 2: ?</li>
-<li>Research Question 3: ?</li>
-</ul>
-<hr>
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<p>Education access is one of the most important indicators of long-term development. Countries with higher enrollment rates are generally better positioned to improve human capital, expand economic opportunity, and reduce inequality. However, education systems are shaped not only by income and geography, but also by political institutions.</p>
+<p>This report examines whether education enrollment differs across African countries with different types of government systems. Specifically, the analysis compares countries categorized as <strong>presidential</strong>, <strong>parliamentary</strong>, and <strong>semi-presidential</strong> systems. The main outcome variables are gross enrollment rates at the primary, secondary, and tertiary education levels.</p>
+<p>The central research question is:</p>
+<blockquote class="blockquote">
+<p>How does education enrollment vary by government system type across African countries?</p>
+</blockquote>
+<p>This question is analyzed using cleaned education enrollment data for African countries. The report focuses on both cross-sectional differences between government system types and time trends in enrollment from 2010 onward.</p>
 </section>
+<section id="data-description" class="level1">
+<h1>Data Description</h1>
+<p>The dataset used in this project contains education enrollment data for African countries. The main cleaned dataset is <code>education_africa_cleaned.csv</code>. It includes country-level information such as country name, government type, country code, region, income group, year, and gross enrollment rates for primary, secondary, and tertiary education.</p>
+<p>The key variables are:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>country</code></td>
+<td>Name of the African country</td>
+</tr>
+<tr class="even">
+<td><code>government</code></td>
+<td>Detailed government system classification</td>
+</tr>
+<tr class="odd">
+<td><code>country_code</code></td>
+<td>Three-letter country code</td>
+</tr>
+<tr class="even">
+<td><code>region</code></td>
+<td>Regional classification</td>
+</tr>
+<tr class="odd">
+<td><code>income_group</code></td>
+<td>World Bank income group</td>
+</tr>
+<tr class="even">
+<td><code>year</code></td>
+<td>Calendar year</td>
+</tr>
+<tr class="odd">
+<td><code>school_enrollment,_primary_%_gross</code></td>
+<td>Gross primary enrollment rate</td>
+</tr>
+<tr class="even">
+<td><code>school_enrollment,_secondary_%_gross</code></td>
+<td>Gross secondary enrollment rate</td>
+</tr>
+<tr class="odd">
+<td><code>school_enrollment,_tertiary_%_gross</code></td>
+<td>Gross tertiary enrollment rate</td>
+</tr>
+</tbody>
+</table>
+<p>Gross enrollment rates can exceed 100% because they include students who are younger or older than the official age group for that education level.</p>
 </section>
-<section id="data-description" class="level2">
-<h2 class="anchored" data-anchor-id="data-description">Data Description</h2>
-<section id="dataset-overview" class="level3">
-<h3 class="anchored" data-anchor-id="dataset-overview">Dataset Overview</h3>
-<p>Describe the World Bank World Development Indicators (WDI) dataset you selected. Include: - The specific indicators you chose and why - The countries or regions included in your analysis - The time period covered - Any data limitations or considerations</p>
-</section>
-<section id="key-variables" class="level3">
-<h3 class="anchored" data-anchor-id="key-variables">Key Variables</h3>
-<p>Present a summary table of your key variables:</p>
-<div id="4465341e" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load libraries</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Set plot style</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>sns.set_style(<span class="st">"whitegrid"</span>)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>plt.rcParams[<span class="st">'figure.figsize'</span>] <span class="op">=</span> (<span class="dv">12</span>, <span class="dv">6</span>)</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Load your data here</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Example: df = pd.read_csv("../data/wdi_data.csv")</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Display data overview</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># print(df.head())</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co"># print(df.info())</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"># print(df.describe())</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="setup" class="level1">
+<h1>Setup</h1>
+<div id="2dcf3e82" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sqlite3</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>sns.set_theme(style<span class="op">=</span><span class="st">"whitegrid"</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>plt.rcParams[<span class="st">"figure.figsize"</span>] <span class="op">=</span> (<span class="dv">12</span>, <span class="dv">7</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="data-cleaning-and-pre-processing" class="level3">
-<h3 class="anchored" data-anchor-id="data-cleaning-and-pre-processing">Data Cleaning and Pre-processing</h3>
-<p>Describe the data cleaning steps performed:</p>
-<div id="0d485388" class="cell" data-execution_count="2">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Data cleaning steps</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># - Handle missing values</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># - Remove duplicates</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># - Convert data types</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># - Merge datasets if needed</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Example cleaning operations:</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># df = df.dropna()</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># df['year'] = pd.to_datetime(df['year'])</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># df = df.sort_values(['country', 'year'])</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="load-data" class="level1">
+<h1>Load Data</h1>
+<div id="70c0f9f2" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load cleaned education dataset</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>data_path <span class="op">=</span> Path(<span class="st">"data/clean-data/education_africa_cleaned.csv"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(data_path)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>df.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">country</th>
+<th data-quarto-table-cell-role="th">government</th>
+<th data-quarto-table-cell-role="th">country_code</th>
+<th data-quarto-table-cell-role="th">region</th>
+<th data-quarto-table-cell-role="th">income_group</th>
+<th data-quarto-table-cell-role="th">year</th>
+<th data-quarto-table-cell-role="th">school_enrollment,_primary_%_gross</th>
+<th data-quarto-table-cell-role="th">school_enrollment,_secondary_%_gross</th>
+<th data-quarto-table-cell-role="th">school_enrollment,_tertiary_%_gross</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>Algeria</td>
+<td>semi-presidential unitary republic</td>
+<td>DZA</td>
+<td>Middle East &amp; North Africa</td>
+<td>Upper middle income</td>
+<td>1971.0</td>
+<td>74.083488</td>
+<td>12.10871</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>Algeria</td>
+<td>semi-presidential unitary republic</td>
+<td>DZA</td>
+<td>Middle East &amp; North Africa</td>
+<td>Upper middle income</td>
+<td>1972.0</td>
+<td>79.225311</td>
+<td>12.65980</td>
+<td>NaN</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>Algeria</td>
+<td>semi-presidential unitary republic</td>
+<td>DZA</td>
+<td>Middle East &amp; North Africa</td>
+<td>Upper middle income</td>
+<td>1973.0</td>
+<td>85.245468</td>
+<td>14.07465</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>Algeria</td>
+<td>semi-presidential unitary republic</td>
+<td>DZA</td>
+<td>Middle East &amp; North Africa</td>
+<td>Upper middle income</td>
+<td>1974.0</td>
+<td>90.666229</td>
+<td>15.19896</td>
+<td>NaN</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>Algeria</td>
+<td>semi-presidential unitary republic</td>
+<td>DZA</td>
+<td>Middle East &amp; North Africa</td>
+<td>Upper middle income</td>
+<td>1975.0</td>
+<td>94.406937</td>
+<td>16.36799</td>
+<td>NaN</td>
+</tr>
+</tbody>
+</table>
+
 </div>
-<hr>
-</section>
-</section>
-<section id="data-analysis" class="level2">
-<h2 class="anchored" data-anchor-id="data-analysis">Data Analysis</h2>
-<section id="exploratory-data-analysis" class="level3">
-<h3 class="anchored" data-anchor-id="exploratory-data-analysis">Exploratory Data Analysis</h3>
-<p>Analyze the distribution and relationships in your data:</p>
-<div id="7cb736d6" class="cell" data-execution_count="3">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># EDA - Univariate Analysis</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Create visualizations for individual variables</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Example:</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># plt.figure(figsize=(12, 4))</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># plt.subplot(1, 3, 1)</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># df['variable1'].hist(bins=30)</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># plt.title('Distribution of Variable 1')</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># plt.xlabel('Value')</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># plt.ylabel('Frequency')</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co"># plt.show()</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-</section>
-<section id="trend-analysis-over-time" class="level3">
-<h3 class="anchored" data-anchor-id="trend-analysis-over-time">Trend Analysis Over Time</h3>
-<p>Examine how your indicators have changed over time:</p>
-<div id="7b236c6d" class="cell" data-execution_count="4">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Time series analysis</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Analyze trends in your selected indicators</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Example:</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># plt.figure(figsize=(14, 6))</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># for country in df['country'].unique()[:5]:</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">#     country_data = df[df['country'] == country]</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">#     plt.plot(country_data['year'], country_data['indicator1'], label=country)</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co"># plt.xlabel('Year')</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co"># plt.ylabel('Indicator Value')</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co"># plt.title('Trend Analysis: Indicator 1 Over Time')</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co"># plt.legend()</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co"># plt.show()</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-</section>
-<section id="relationship-analysis" class="level3">
-<h3 class="anchored" data-anchor-id="relationship-analysis">Relationship Analysis</h3>
-<p>Explore relationships between your indicators:</p>
-<div id="98fe7a26" class="cell" data-execution_count="5">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Correlation analysis</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># df_numeric = df.select_dtypes(include=[np.number])</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># correlation_matrix = df_numeric.corr()</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualization</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># plt.figure(figsize=(10, 8))</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># sns.heatmap(correlation_matrix, annot=True, fmt='.2f', cmap='coolwarm')</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># plt.title('Correlation Matrix of Indicators')</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co"># plt.show()</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="77862740" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df.shape</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<pre><code>(2303, 9)</code></pre>
 </div>
-</section>
-<section id="regionalcountry-comparisons" class="level3">
-<h3 class="anchored" data-anchor-id="regionalcountry-comparisons">Regional/Country Comparisons</h3>
-<p>Compare your indicators across countries or regions:</p>
-<div id="44256622" class="cell" data-execution_count="6">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Comparative analysis</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Group and summarize data by country/region</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Example:</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># summary_stats = df.groupby('country')[['indicator1', 'indicator2']].agg(['mean', 'std', 'min', 'max'])</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co"># print(summary_stats)</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualization</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co"># df_latest = df[df['year'] == df['year'].max()]</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co"># plt.figure(figsize=(12, 6))</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co"># df_latest.sort_values('indicator1', ascending=False).head(10).plot(</span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co">#     x='country', y='indicator1', kind='bar'</span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co"># )</span></span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co"># plt.title('Top 10 Countries by Indicator 1 (Most Recent Year)')</span></span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="co"># plt.ylabel('Indicator Value')</span></span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="co"># plt.xlabel('Country')</span></span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="co"># plt.xticks(rotation=45)</span></span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="co"># plt.tight_layout()</span></span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="co"># plt.show()</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<hr>
-</section>
-</section>
-<section id="results-and-discussion" class="level2">
-<h2 class="anchored" data-anchor-id="results-and-discussion">Results and Discussion</h2>
-<section id="main-findings" class="level3">
-<h3 class="anchored" data-anchor-id="main-findings">Main Findings</h3>
-<p>Present your key findings in this section. Include both statistical results and interpretations:</p>
-<div id="08400aae" class="cell" data-execution_count="7">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary statistics and key metrics</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate and display main findings</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Example:</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># print("Average Indicator 1:")</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co"># print(df.groupby('country')['indicator1'].mean().sort_values(ascending=False))</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Statistical tests (if applicable)</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co"># from scipy import stats</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co"># correlation = df['indicator1'].corr(df['indicator2'])</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co"># print(f"Correlation between Indicator 1 and 2: {correlation:.3f}")</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="04c4af53" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>df.info()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 2303 entries, 0 to 2302
+Data columns (total 9 columns):
+ #   Column                                Non-Null Count  Dtype  
+---  ------                                --------------  -----  
+ 0   country                               2303 non-null   object 
+ 1   government                            2303 non-null   object 
+ 2   country_code                          2303 non-null   object 
+ 3   region                                2303 non-null   object 
+ 4   income_group                          2303 non-null   object 
+ 5   year                                  2303 non-null   float64
+ 6   school_enrollment,_primary_%_gross    2193 non-null   float64
+ 7   school_enrollment,_secondary_%_gross  1689 non-null   float64
+ 8   school_enrollment,_tertiary_%_gross   1513 non-null   float64
+dtypes: float64(4), object(5)
+memory usage: 162.1+ KB</code></pre>
 </div>
-</section>
-<section id="visualizations" class="level3">
-<h3 class="anchored" data-anchor-id="visualizations">Visualizations</h3>
-<p>Present well-formatted tables and plots of your results:</p>
-<div id="576347db" class="cell" data-execution_count="8">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create summary tables</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># results_df = pd.DataFrame({</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#     'Metric': ['Mean', 'Median', 'Std Dev'],</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">#     'Indicator 1': [df['indicator1'].mean(), df['indicator1'].median(), df['indicator1'].std()],</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#     'Indicator 2': [df['indicator2'].mean(), df['indicator2'].median(), df['indicator2'].std()]</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co"># })</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># print(results_df)</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Create publication-ready figures</span></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co"># fig, axes = plt.subplots(2, 2, figsize=(14, 10))</span></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co"># # Plot 1</span></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co"># axes[0, 0].scatter(df['indicator1'], df['indicator2'])</span></span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co"># axes[0, 0].set_title('Relationship between Indicator 1 and 2')</span></span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="co"># # Add more plots...</span></span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="co"># plt.tight_layout()</span></span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="co"># plt.show()</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="interpretation" class="level3">
-<h3 class="anchored" data-anchor-id="interpretation">Interpretation</h3>
-<p>Interpret your results in the context of your research questions:</p>
-<ul>
-<li><strong>Finding 1:</strong> Explain what this result means and why it is important</li>
-<li><strong>Finding 2:</strong> Connect this finding to your research objectives</li>
-<li><strong>Finding 3:</strong> Discuss any unexpected or noteworthy patterns</li>
-</ul>
-<hr>
-</section>
-</section>
-<section id="conclusion" class="level2">
-<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
-<p>Summarize your main findings and their implications. Address:</p>
+<section id="data-cleaning" class="level1">
+<h1>Data Cleaning</h1>
+<p>The original government variable contains detailed descriptions, such as “presidential republic,” “semi-presidential republic,” and “parliamentary republic.” For this analysis, these detailed categories are simplified into three broader government system types:</p>
 <ol type="1">
-<li><strong>Summary of Key Results:</strong> Briefly restate your main findings</li>
-<li><strong>Contribution:</strong> How does this analysis contribute to understanding your chosen topic?</li>
-<li><strong>Limitations:</strong> What are the limitations of your analysis? (data quality, time period, countries covered, etc.)</li>
-<li><strong>Future Research:</strong> What questions remain unanswered? What would you investigate next?</li>
+<li><strong>Presidential</strong></li>
+<li><strong>Parliamentary</strong></li>
+<li><strong>Semi-presidential</strong></li>
 </ol>
-<hr>
+<p>This makes the results easier to interpret and aligns the analysis with the figures comparing education outcomes by system type.</p>
+<div id="687af65d" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Standardize column names for easier coding</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.rename(columns<span class="op">=</span>{</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"school_enrollment,_primary_%_gross"</span>: <span class="st">"primary_enrollment"</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"school_enrollment,_secondary_%_gross"</span>: <span class="st">"secondary_enrollment"</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"school_enrollment,_tertiary_%_gross"</span>: <span class="st">"tertiary_enrollment"</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Create simplified government system type</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> classify_system(gov):</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    gov <span class="op">=</span> <span class="bu">str</span>(gov).lower()</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="st">"semi-presidential"</span> <span class="kw">in</span> gov:</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">"semi-presidential"</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> <span class="st">"presidential"</span> <span class="kw">in</span> gov:</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">"presidential"</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> <span class="st">"parliamentary"</span> <span class="kw">in</span> gov:</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">"parliamentary"</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">"other"</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"system_type"</span>] <span class="op">=</span> df[<span class="st">"government"</span>].<span class="bu">apply</span>(classify_system)</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Keep only the three main government system types</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df[df[<span class="st">"system_type"</span>].isin([<span class="st">"presidential"</span>, <span class="st">"parliamentary"</span>, <span class="st">"semi-presidential"</span>])].copy()</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>df[[<span class="st">"country"</span>, <span class="st">"government"</span>, <span class="st">"system_type"</span>, <span class="st">"year"</span>, <span class="st">"primary_enrollment"</span>, <span class="st">"secondary_enrollment"</span>, <span class="st">"tertiary_enrollment"</span>]].head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">country</th>
+<th data-quarto-table-cell-role="th">government</th>
+<th data-quarto-table-cell-role="th">system_type</th>
+<th data-quarto-table-cell-role="th">year</th>
+<th data-quarto-table-cell-role="th">primary_enrollment</th>
+<th data-quarto-table-cell-role="th">secondary_enrollment</th>
+<th data-quarto-table-cell-role="th">tertiary_enrollment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>Algeria</td>
+<td>semi-presidential unitary republic</td>
+<td>semi-presidential</td>
+<td>1971.0</td>
+<td>74.083488</td>
+<td>12.10871</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>Algeria</td>
+<td>semi-presidential unitary republic</td>
+<td>semi-presidential</td>
+<td>1972.0</td>
+<td>79.225311</td>
+<td>12.65980</td>
+<td>NaN</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>Algeria</td>
+<td>semi-presidential unitary republic</td>
+<td>semi-presidential</td>
+<td>1973.0</td>
+<td>85.245468</td>
+<td>14.07465</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>Algeria</td>
+<td>semi-presidential unitary republic</td>
+<td>semi-presidential</td>
+<td>1974.0</td>
+<td>90.666229</td>
+<td>15.19896</td>
+<td>NaN</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>Algeria</td>
+<td>semi-presidential unitary republic</td>
+<td>semi-presidential</td>
+<td>1975.0</td>
+<td>94.406937</td>
+<td>16.36799</td>
+<td>NaN</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="b1661d10" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check number of observations by system type</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"system_type"</span>].value_counts()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<pre><code>system_type
+presidential         1570
+semi-presidential     498
+parliamentary         235
+Name: count, dtype: int64</code></pre>
+</div>
+</div>
+<div id="edac2325" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check number of countries by system type</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>df.groupby(<span class="st">"system_type"</span>)[<span class="st">"country"</span>].nunique().reset_index(name<span class="op">=</span><span class="st">"number_of_countries"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">system_type</th>
+<th data-quarto-table-cell-role="th">number_of_countries</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>parliamentary</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>presidential</td>
+<td>36</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>semi-presidential</td>
+<td>11</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
 </section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
-<p>Add your references here in a consistent format (APA, Chicago, or your preferred style).</p>
-<ul>
-<li>World Bank. (2023). World Development Indicators. Retrieved from https://data.worldbank.org/products/wdi</li>
-<li>Add more references as needed</li>
-</ul>
+<section id="sql-descriptive-statistics" class="level1">
+<h1>SQL Descriptive Statistics</h1>
+<p>The project uses SQL for descriptive statistics. The cleaned dataset is loaded into a SQLite database, and SQL queries are used to summarize average education enrollment by government system type.</p>
+<div id="8cdd0972" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>conn <span class="op">=</span> sqlite3.<span class="ex">connect</span>(<span class="st">":memory:"</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>df.to_sql(<span class="st">"education"</span>, conn, index<span class="op">=</span><span class="va">False</span>, if_exists<span class="op">=</span><span class="st">"replace"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<pre><code>2303</code></pre>
+</div>
+</div>
+<div id="7d58df7e" class="cell" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>query <span class="op">=</span> <span class="st">"""</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="st">SELECT</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="st">    system_type,</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="st">    COUNT(*) AS observations,</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="st">    COUNT(DISTINCT country) AS countries,</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="st">    ROUND(AVG(primary_enrollment), 2) AS avg_primary_enrollment,</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="st">    ROUND(AVG(secondary_enrollment), 2) AS avg_secondary_enrollment,</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="st">    ROUND(AVG(tertiary_enrollment), 2) AS avg_tertiary_enrollment</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="st">FROM education</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="st">GROUP BY system_type</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="st">ORDER BY avg_secondary_enrollment DESC;</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>summary_by_system <span class="op">=</span> pd.read_sql_query(query, conn)</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>summary_by_system</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">system_type</th>
+<th data-quarto-table-cell-role="th">observations</th>
+<th data-quarto-table-cell-role="th">countries</th>
+<th data-quarto-table-cell-role="th">avg_primary_enrollment</th>
+<th data-quarto-table-cell-role="th">avg_secondary_enrollment</th>
+<th data-quarto-table-cell-role="th">avg_tertiary_enrollment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>parliamentary</td>
+<td>235</td>
+<td>5</td>
+<td>99.84</td>
+<td>45.10</td>
+<td>11.03</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>semi-presidential</td>
+<td>498</td>
+<td>11</td>
+<td>85.44</td>
+<td>41.94</td>
+<td>11.78</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>presidential</td>
+<td>1570</td>
+<td>36</td>
+<td>84.57</td>
+<td>29.60</td>
+<td>4.90</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="6b22549e" class="cell" data-execution_count="10">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>query <span class="op">=</span> <span class="st">"""</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="st">SELECT</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="st">    system_type,</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="st">    MIN(year) AS first_year,</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="st">    MAX(year) AS last_year,</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="st">    ROUND(AVG(primary_enrollment), 2) AS mean_primary,</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="st">    ROUND(AVG(secondary_enrollment), 2) AS mean_secondary,</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="st">    ROUND(AVG(tertiary_enrollment), 2) AS mean_tertiary</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="st">FROM education</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="st">GROUP BY system_type;</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>pd.read_sql_query(query, conn)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">system_type</th>
+<th data-quarto-table-cell-role="th">first_year</th>
+<th data-quarto-table-cell-role="th">last_year</th>
+<th data-quarto-table-cell-role="th">mean_primary</th>
+<th data-quarto-table-cell-role="th">mean_secondary</th>
+<th data-quarto-table-cell-role="th">mean_tertiary</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>parliamentary</td>
+<td>1970.0</td>
+<td>2024.0</td>
+<td>99.84</td>
+<td>45.10</td>
+<td>11.03</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>presidential</td>
+<td>1970.0</td>
+<td>2025.0</td>
+<td>84.57</td>
+<td>29.60</td>
+<td>4.90</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>semi-presidential</td>
+<td>1970.0</td>
+<td>2025.0</td>
+<td>85.44</td>
+<td>41.94</td>
+<td>11.78</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
 </section>
+<section id="exploratory-analysis" class="level1">
+<h1>Exploratory Analysis</h1>
+<section id="enrollment-distribution-by-government-system-type" class="level2">
+<h2 class="anchored" data-anchor-id="enrollment-distribution-by-government-system-type">Enrollment Distribution by Government System Type</h2>
+<p>To compare education enrollment across government types, the first figure uses boxplots for primary, secondary, and tertiary enrollment.</p>
+<div id="99ddb31a" class="cell" data-execution_count="11">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert to long format for plotting</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>plot_df <span class="op">=</span> df.melt(</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    id_vars<span class="op">=</span>[<span class="st">"country"</span>, <span class="st">"year"</span>, <span class="st">"system_type"</span>],</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    value_vars<span class="op">=</span>[<span class="st">"primary_enrollment"</span>, <span class="st">"secondary_enrollment"</span>, <span class="st">"tertiary_enrollment"</span>],</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    var_name<span class="op">=</span><span class="st">"education_level"</span>,</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    value_name<span class="op">=</span><span class="st">"enrollment"</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>plot_df[<span class="st">"education_level"</span>] <span class="op">=</span> plot_df[<span class="st">"education_level"</span>].replace({</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"primary_enrollment"</span>: <span class="st">"Primary"</span>,</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"secondary_enrollment"</span>: <span class="st">"Secondary"</span>,</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"tertiary_enrollment"</span>: <span class="st">"Tertiary"</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Drop missing values</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>plot_df <span class="op">=</span> plot_df.dropna(subset<span class="op">=</span>[<span class="st">"enrollment"</span>])</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">7</span>))</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>sns.boxplot(</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>plot_df,</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">"education_level"</span>,</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span><span class="st">"enrollment"</span>,</span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>    hue<span class="op">=</span><span class="st">"system_type"</span>,</span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>    order<span class="op">=</span>[<span class="st">"Primary"</span>, <span class="st">"Secondary"</span>, <span class="st">"Tertiary"</span>],</span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>    hue_order<span class="op">=</span>[<span class="st">"semi-presidential"</span>, <span class="st">"presidential"</span>, <span class="st">"parliamentary"</span>]</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Education Enrollment by Government Type in Africa"</span>)</span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Education Level"</span>)</span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Enrollment (%)"</span>)</span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>plt.legend(title<span class="op">=</span><span class="st">"system_type"</span>)</span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-12-output-1.png" width="1136" height="656" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The boxplot shows that primary education enrollment is high across all three government system types. This suggests that primary education access has become relatively widespread across the countries included in the dataset. However, secondary and tertiary enrollment show much larger differences.</p>
+<p>Parliamentary systems appear to have higher median secondary and tertiary enrollment than presidential systems. Semi-presidential systems also perform relatively well in some years, but they appear more variable. Presidential systems tend to have lower secondary and tertiary enrollment, especially at the tertiary level.</p>
+</section>
+</section>
+<section id="time-trends-since-2010" class="level1">
+<h1>Time Trends Since 2010</h1>
+<p>Because education systems change over time, the next figures examine average enrollment trends by government type from 2010 onward.</p>
+<div id="cd05f344" class="cell" data-execution_count="12">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>recent_df <span class="op">=</span> df[df[<span class="st">"year"</span>] <span class="op">&gt;=</span> <span class="dv">2010</span>].copy()</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>trend_df <span class="op">=</span> recent_df.groupby([<span class="st">"year"</span>, <span class="st">"system_type"</span>], as_index<span class="op">=</span><span class="va">False</span>).agg(</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    primary_enrollment<span class="op">=</span>(<span class="st">"primary_enrollment"</span>, <span class="st">"mean"</span>),</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    secondary_enrollment<span class="op">=</span>(<span class="st">"secondary_enrollment"</span>, <span class="st">"mean"</span>),</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    tertiary_enrollment<span class="op">=</span>(<span class="st">"tertiary_enrollment"</span>, <span class="st">"mean"</span>)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>trend_df.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="12">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">year</th>
+<th data-quarto-table-cell-role="th">system_type</th>
+<th data-quarto-table-cell-role="th">primary_enrollment</th>
+<th data-quarto-table-cell-role="th">secondary_enrollment</th>
+<th data-quarto-table-cell-role="th">tertiary_enrollment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>2010.0</td>
+<td>parliamentary</td>
+<td>111.098710</td>
+<td>66.955210</td>
+<td>16.923071</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>2010.0</td>
+<td>presidential</td>
+<td>100.611273</td>
+<td>41.375067</td>
+<td>7.428838</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>2010.0</td>
+<td>semi-presidential</td>
+<td>102.869339</td>
+<td>57.439662</td>
+<td>15.385104</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>2011.0</td>
+<td>parliamentary</td>
+<td>111.177340</td>
+<td>69.892062</td>
+<td>17.728306</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>2011.0</td>
+<td>presidential</td>
+<td>101.747405</td>
+<td>41.629098</td>
+<td>7.950420</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<section id="primary-enrollment-trends" class="level2">
+<h2 class="anchored" data-anchor-id="primary-enrollment-trends">Primary Enrollment Trends</h2>
+<div id="0b1d7495" class="cell" data-execution_count="13">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">7</span>))</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>sns.lineplot(</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>trend_df,</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">"year"</span>,</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span><span class="st">"primary_enrollment"</span>,</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    hue<span class="op">=</span><span class="st">"system_type"</span>,</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    marker<span class="op">=</span><span class="st">"o"</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Primary Education Enrollment Trends by Government Type"</span>)</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Year"</span>)</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Enrollment (%)"</span>)</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>plt.legend(title<span class="op">=</span><span class="st">"system_type"</span>)</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-14-output-1.png" width="1136" height="656" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Primary enrollment remains high across all government system types. Most values are close to or above 100%, which is possible because the variable is a gross enrollment rate. Parliamentary systems show a decline over time, while presidential and semi-presidential systems fluctuate. These fluctuations may reflect real changes, data availability, or the changing composition of country-year observations.</p>
+</section>
+<section id="secondary-enrollment-trends" class="level2">
+<h2 class="anchored" data-anchor-id="secondary-enrollment-trends">Secondary Enrollment Trends</h2>
+<div id="fa5b9bae" class="cell" data-execution_count="14">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">7</span>))</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>sns.lineplot(</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>trend_df,</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">"year"</span>,</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span><span class="st">"secondary_enrollment"</span>,</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    hue<span class="op">=</span><span class="st">"system_type"</span>,</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    marker<span class="op">=</span><span class="st">"o"</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Secondary Education Enrollment Trends by Government Type"</span>)</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Year"</span>)</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Enrollment (%)"</span>)</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>plt.legend(title<span class="op">=</span><span class="st">"system_type"</span>)</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-15-output-1.png" width="1136" height="656" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Secondary enrollment shows a clearer separation between system types. Parliamentary systems generally have the highest average secondary enrollment across the period. Presidential systems tend to have the lowest average secondary enrollment. Semi-presidential systems fall between the two for many years, although they show more volatility.</p>
+<p>This pattern suggests that differences in education enrollment are more visible at the secondary level than at the primary level. Primary enrollment may be closer to universal in many countries, while secondary education may still depend more strongly on institutional capacity, public investment, and economic conditions.</p>
+</section>
+<section id="tertiary-enrollment-trends" class="level2">
+<h2 class="anchored" data-anchor-id="tertiary-enrollment-trends">Tertiary Enrollment Trends</h2>
+<div id="2b57fb4f" class="cell" data-execution_count="15">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">7</span>))</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>sns.lineplot(</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>trend_df,</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">"year"</span>,</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span><span class="st">"tertiary_enrollment"</span>,</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    hue<span class="op">=</span><span class="st">"system_type"</span>,</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    marker<span class="op">=</span><span class="st">"o"</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Tertiary Education Enrollment Trends by Government Type"</span>)</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Year"</span>)</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Enrollment (%)"</span>)</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>plt.legend(title<span class="op">=</span><span class="st">"system_type"</span>)</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="report_files/figure-html/cell-16-output-1.png" width="1136" height="656" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Tertiary enrollment is much lower than primary and secondary enrollment across all government system types. However, parliamentary and semi-presidential systems tend to have higher tertiary enrollment than presidential systems.</p>
+<p>The gap is especially clear after 2015. Parliamentary systems show a steady increase in tertiary enrollment, while presidential systems remain much lower. Semi-presidential systems increase sharply in later years, although this pattern should be interpreted carefully because fewer countries and more missing data may affect the average.</p>
+</section>
+</section>
+<section id="additional-summary-tables" class="level1">
+<h1>Additional Summary Tables</h1>
+<div id="31674b5d" class="cell" data-execution_count="16">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Average enrollment by government system type since 2010</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>recent_summary <span class="op">=</span> recent_df.groupby(<span class="st">"system_type"</span>).agg(</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    countries<span class="op">=</span>(<span class="st">"country"</span>, <span class="st">"nunique"</span>),</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    observations<span class="op">=</span>(<span class="st">"country"</span>, <span class="st">"count"</span>),</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    avg_primary<span class="op">=</span>(<span class="st">"primary_enrollment"</span>, <span class="st">"mean"</span>),</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    avg_secondary<span class="op">=</span>(<span class="st">"secondary_enrollment"</span>, <span class="st">"mean"</span>),</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    avg_tertiary<span class="op">=</span>(<span class="st">"tertiary_enrollment"</span>, <span class="st">"mean"</span>)</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>).<span class="bu">round</span>(<span class="dv">2</span>).reset_index()</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>recent_summary</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="16">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">system_type</th>
+<th data-quarto-table-cell-role="th">countries</th>
+<th data-quarto-table-cell-role="th">observations</th>
+<th data-quarto-table-cell-role="th">avg_primary</th>
+<th data-quarto-table-cell-role="th">avg_secondary</th>
+<th data-quarto-table-cell-role="th">avg_tertiary</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>parliamentary</td>
+<td>4</td>
+<td>57</td>
+<td>105.04</td>
+<td>79.22</td>
+<td>23.99</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>presidential</td>
+<td>36</td>
+<td>404</td>
+<td>102.18</td>
+<td>49.60</td>
+<td>11.33</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>semi-presidential</td>
+<td>11</td>
+<td>124</td>
+<td>101.47</td>
+<td>62.82</td>
+<td>23.04</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="60ffef17" class="cell" data-execution_count="17">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Most recent available average by system type</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>latest_year <span class="op">=</span> <span class="bu">int</span>(df[<span class="st">"year"</span>].<span class="bu">max</span>())</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>latest_df <span class="op">=</span> df[df[<span class="st">"year"</span>] <span class="op">==</span> latest_year]</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>latest_summary <span class="op">=</span> latest_df.groupby(<span class="st">"system_type"</span>).agg(</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>    countries<span class="op">=</span>(<span class="st">"country"</span>, <span class="st">"nunique"</span>),</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>    avg_primary<span class="op">=</span>(<span class="st">"primary_enrollment"</span>, <span class="st">"mean"</span>),</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    avg_secondary<span class="op">=</span>(<span class="st">"secondary_enrollment"</span>, <span class="st">"mean"</span>),</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>    avg_tertiary<span class="op">=</span>(<span class="st">"tertiary_enrollment"</span>, <span class="st">"mean"</span>)</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>).<span class="bu">round</span>(<span class="dv">2</span>).reset_index()</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>latest_year, latest_summary</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="17">
+<pre><code>(2025,
+          system_type  countries  avg_primary  avg_secondary  avg_tertiary
+ 0       presidential          2       100.53          23.13          6.38
+ 1  semi-presidential          2       105.48            NaN         38.04)</code></pre>
+</div>
+</div>
+</section>
+<section id="results" class="level1">
+<h1>Results</h1>
+<p>The analysis shows three main findings.</p>
+<p>First, primary education enrollment is high across all government system types. This suggests that primary schooling has expanded broadly across African countries, regardless of whether a country has a presidential, parliamentary, or semi-presidential system.</p>
+<p>Second, larger differences appear at the secondary education level. Parliamentary systems generally have higher secondary enrollment than presidential systems. Semi-presidential systems often fall between parliamentary and presidential systems, though they show greater year-to-year variation.</p>
+<p>Third, tertiary enrollment is the lowest of the three education levels, but it shows the clearest long-term difference between government types. Parliamentary and semi-presidential systems generally have higher tertiary enrollment than presidential systems. Presidential systems remain lower throughout most of the observed period.</p>
+<p>Overall, the results suggest that government system type is associated with differences in education enrollment, especially beyond the primary level. However, this relationship should not be interpreted as causal. Government type may be correlated with other important factors, including income level, colonial history, political stability, public spending, and state capacity.</p>
+</section>
+<section id="limitations" class="level1">
+<h1>Limitations</h1>
+<p>This project has several limitations.</p>
+<p>First, the analysis is descriptive and does not prove that government system type causes higher or lower education enrollment. The observed differences may be influenced by income, region, population size, conflict, or historical factors.</p>
+<p>Second, the dataset contains missing values, especially for secondary and tertiary education. Because tertiary education has the least complete data, trends at that level should be interpreted cautiously.</p>
+<p>Third, the government system categories are simplified. Many countries have more specific institutional arrangements, such as federal presidential republics, unitary presidential republics, constitutional monarchies, or hybrid systems. Grouping them into only three categories makes the analysis easier to interpret, but it may hide important variation.</p>
+<p>Fourth, the analysis uses gross enrollment rates. Gross enrollment can exceed 100%, so it should not be interpreted as the exact percentage of children of the official age group enrolled in school.</p>
+</section>
+<section id="conclusion" class="level1">
+<h1>Conclusion</h1>
+<p>This report examined education enrollment in African countries by government system type. The analysis found that primary enrollment is high across all systems, but secondary and tertiary enrollment differ more strongly by government type.</p>
+<p>Parliamentary systems generally show higher secondary and tertiary enrollment than presidential systems. Semi-presidential systems also show relatively strong outcomes in some years, especially for tertiary education, but with more volatility.</p>
+<p>The findings suggest that political institutions may be connected to educational outcomes, particularly at higher levels of education. However, future research should include additional controls such as income group, public education spending, conflict status, and regional effects before making stronger causal claims.</p>
+</section>
+<section id="group-contributions" class="level1">
+<h1>Group Contributions</h1>
+<p>The project repository was managed using GitHub. Contributions were evaluated using GitHub commit history, additions, deletions, and each group member’s role in the project.</p>
+<pre class="{bash}"><code>git shortlog -sn --all</code></pre>
+<pre class="{bash}"><code>git log --all --format='%aN' | sort -u | while read name; do
+  echo "Author: $name"
+  git log --all --author="$name" --pretty=tformat: --numstat | \
+    awk '{ added += $1; deleted += $2 } END { print "Lines added:", added, "Lines deleted:", deleted, "Net lines:", added - deleted }'
+  echo
+done</code></pre>
+</section>
+<section id="references" class="level1">
+<h1>References</h1>
+<p>World Bank. (2024). <em>World Development Indicators</em>. World Bank.</p>
+<p>Project dataset: <code>education_africa_cleaned.csv</code>.</p>
+<p>Project codebook: <code>CODEBOOK.md</code>.</p>
+<p>Project cleaning script: <code>clean_joined_data.py</code>.</p>
 </section>
 
 </main>

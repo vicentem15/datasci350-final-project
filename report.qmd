@@ -1,5 +1,6 @@
 ---
-title: "DATASCI 350 Final Project: World Bank Development Indicators Analysis"
+title: "Government System Type and Education Enrollment in Africa"
+subtitle: "A World Bank Education Enrollment Analysis"
 format:
   html:
     theme: cosmo
@@ -12,236 +13,386 @@ execute:
   echo: true
   warning: false
   message: false
+jupyter: python3
 ---
 
-# Project Title
+# Introduction
 
-**Project Members:**
-- Member 1 (Emory ID: )
-- Member 2 (Emory ID: )
-- Member 3 (Emory ID: )
-- Member 4 (Emory ID: )
+Education access is one of the most important indicators of long-term development. Countries with higher enrollment rates are generally better positioned to improve human capital, expand economic opportunity, and reduce inequality. However, education systems are shaped not only by income and geography, but also by political institutions.
 
----
+This report examines whether education enrollment differs across African countries with different types of government systems. Specifically, the analysis compares countries categorized as **presidential**, **parliamentary**, and **semi-presidential** systems. The main outcome variables are gross enrollment rates at the primary, secondary, and tertiary education levels.
 
-## Introduction
+The central research question is:
 
-Provide a clear description of your research topic and research questions. Briefly explain why this topic is important and what you hope to discover through your analysis. Include context from existing literature or known facts about your chosen topic (Economic Development, Population Dynamics, or Education).
+> How does education enrollment vary by government system type across African countries?
 
-### Research Questions
+This question is analyzed using cleaned education enrollment data for African countries. The report focuses on both cross-sectional differences between government system types and time trends in enrollment from 2010 onward.
 
-- Research Question 1: ?
-- Research Question 2: ?
-- Research Question 3: ?
+# Data Description
 
----
+The dataset used in this project contains education enrollment data for African countries. The main cleaned dataset is `education_africa_cleaned.csv`. It includes country-level information such as country name, government type, country code, region, income group, year, and gross enrollment rates for primary, secondary, and tertiary education.
 
-## Data Description
+The key variables are:
 
-### Dataset Overview
+| Variable | Meaning |
+|---|---|
+| `country` | Name of the African country |
+| `government` | Detailed government system classification |
+| `country_code` | Three-letter country code |
+| `region` | Regional classification |
+| `income_group` | World Bank income group |
+| `year` | Calendar year |
+| `school_enrollment,_primary_%_gross` | Gross primary enrollment rate |
+| `school_enrollment,_secondary_%_gross` | Gross secondary enrollment rate |
+| `school_enrollment,_tertiary_%_gross` | Gross tertiary enrollment rate |
 
-Describe the World Bank World Development Indicators (WDI) dataset you selected. Include:
-- The specific indicators you chose and why
-- The countries or regions included in your analysis
-- The time period covered
-- Any data limitations or considerations
+Gross enrollment rates can exceed 100% because they include students who are younger or older than the official age group for that education level.
 
-### Key Variables
-
-Present a summary table of your key variables:
+# Setup
 
 ```{python}
-# Load libraries
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+import sqlite3
+from pathlib import Path
 
-# Set plot style
-sns.set_style("whitegrid")
-plt.rcParams['figure.figsize'] = (12, 6)
-
-# Load your data here
-# Example: df = pd.read_csv("../data/wdi_data.csv")
-
-# Display data overview
-# print(df.head())
-# print(df.info())
-# print(df.describe())
+sns.set_theme(style="whitegrid")
+plt.rcParams["figure.figsize"] = (12, 7)
 ```
 
-### Data Cleaning and Pre-processing
-
-Describe the data cleaning steps performed:
+# Load Data
 
 ```{python}
-# Data cleaning steps
-# - Handle missing values
-# - Remove duplicates
-# - Convert data types
-# - Merge datasets if needed
+# Load cleaned education dataset
+data_path = Path("data/clean-data/education_africa_cleaned.csv")
 
-# Example cleaning operations:
-# df = df.dropna()
-# df['year'] = pd.to_datetime(df['year'])
-# df = df.sort_values(['country', 'year'])
+df = pd.read_csv(data_path)
+
+df.head()
 ```
-
----
-
-## Data Analysis
-
-### Exploratory Data Analysis
-
-Analyze the distribution and relationships in your data:
 
 ```{python}
-# EDA - Univariate Analysis
-# Create visualizations for individual variables
-
-# Example:
-# plt.figure(figsize=(12, 4))
-# plt.subplot(1, 3, 1)
-# df['variable1'].hist(bins=30)
-# plt.title('Distribution of Variable 1')
-# plt.xlabel('Value')
-# plt.ylabel('Frequency')
-# plt.show()
+df.shape
 ```
-
-### Trend Analysis Over Time
-
-Examine how your indicators have changed over time:
 
 ```{python}
-# Time series analysis
-# Analyze trends in your selected indicators
-
-# Example:
-# plt.figure(figsize=(14, 6))
-# for country in df['country'].unique()[:5]:
-#     country_data = df[df['country'] == country]
-#     plt.plot(country_data['year'], country_data['indicator1'], label=country)
-# plt.xlabel('Year')
-# plt.ylabel('Indicator Value')
-# plt.title('Trend Analysis: Indicator 1 Over Time')
-# plt.legend()
-# plt.show()
+df.info()
 ```
 
-### Relationship Analysis
+# Data Cleaning
 
-Explore relationships between your indicators:
+The original government variable contains detailed descriptions, such as “presidential republic,” “semi-presidential republic,” and “parliamentary republic.” For this analysis, these detailed categories are simplified into three broader government system types:
+
+1. **Presidential**
+2. **Parliamentary**
+3. **Semi-presidential**
+
+This makes the results easier to interpret and aligns the analysis with the figures comparing education outcomes by system type.
 
 ```{python}
-# Correlation analysis
-# df_numeric = df.select_dtypes(include=[np.number])
-# correlation_matrix = df_numeric.corr()
+# Standardize column names for easier coding
+df = df.rename(columns={
+    "school_enrollment,_primary_%_gross": "primary_enrollment",
+    "school_enrollment,_secondary_%_gross": "secondary_enrollment",
+    "school_enrollment,_tertiary_%_gross": "tertiary_enrollment"
+})
 
-# Visualization
-# plt.figure(figsize=(10, 8))
-# sns.heatmap(correlation_matrix, annot=True, fmt='.2f', cmap='coolwarm')
-# plt.title('Correlation Matrix of Indicators')
-# plt.show()
+# Create simplified government system type
+def classify_system(gov):
+    gov = str(gov).lower()
+    if "semi-presidential" in gov:
+        return "semi-presidential"
+    elif "presidential" in gov:
+        return "presidential"
+    elif "parliamentary" in gov:
+        return "parliamentary"
+    else:
+        return "other"
+
+df["system_type"] = df["government"].apply(classify_system)
+
+# Keep only the three main government system types
+df = df[df["system_type"].isin(["presidential", "parliamentary", "semi-presidential"])].copy()
+
+df[["country", "government", "system_type", "year", "primary_enrollment", "secondary_enrollment", "tertiary_enrollment"]].head()
 ```
-
-### Regional/Country Comparisons
-
-Compare your indicators across countries or regions:
 
 ```{python}
-# Comparative analysis
-# Group and summarize data by country/region
-
-# Example:
-# summary_stats = df.groupby('country')[['indicator1', 'indicator2']].agg(['mean', 'std', 'min', 'max'])
-# print(summary_stats)
-
-# Visualization
-# df_latest = df[df['year'] == df['year'].max()]
-# plt.figure(figsize=(12, 6))
-# df_latest.sort_values('indicator1', ascending=False).head(10).plot(
-#     x='country', y='indicator1', kind='bar'
-# )
-# plt.title('Top 10 Countries by Indicator 1 (Most Recent Year)')
-# plt.ylabel('Indicator Value')
-# plt.xlabel('Country')
-# plt.xticks(rotation=45)
-# plt.tight_layout()
-# plt.show()
+# Check number of observations by system type
+df["system_type"].value_counts()
 ```
-
----
-
-## Results and Discussion
-
-### Main Findings
-
-Present your key findings in this section. Include both statistical results and interpretations:
 
 ```{python}
-# Summary statistics and key metrics
-# Calculate and display main findings
-
-# Example:
-# print("Average Indicator 1:")
-# print(df.groupby('country')['indicator1'].mean().sort_values(ascending=False))
-
-# Statistical tests (if applicable)
-# from scipy import stats
-# correlation = df['indicator1'].corr(df['indicator2'])
-# print(f"Correlation between Indicator 1 and 2: {correlation:.3f}")
+# Check number of countries by system type
+df.groupby("system_type")["country"].nunique().reset_index(name="number_of_countries")
 ```
 
-### Visualizations
+# SQL Descriptive Statistics
 
-Present well-formatted tables and plots of your results:
+The project uses SQL for descriptive statistics. The cleaned dataset is loaded into a SQLite database, and SQL queries are used to summarize average education enrollment by government system type.
 
 ```{python}
-# Create summary tables
-# results_df = pd.DataFrame({
-#     'Metric': ['Mean', 'Median', 'Std Dev'],
-#     'Indicator 1': [df['indicator1'].mean(), df['indicator1'].median(), df['indicator1'].std()],
-#     'Indicator 2': [df['indicator2'].mean(), df['indicator2'].median(), df['indicator2'].std()]
-# })
-# print(results_df)
-
-# Create publication-ready figures
-# fig, axes = plt.subplots(2, 2, figsize=(14, 10))
-#
-# # Plot 1
-# axes[0, 0].scatter(df['indicator1'], df['indicator2'])
-# axes[0, 0].set_title('Relationship between Indicator 1 and 2')
-#
-# # Add more plots...
-# plt.tight_layout()
-# plt.show()
+conn = sqlite3.connect(":memory:")
+df.to_sql("education", conn, index=False, if_exists="replace")
 ```
 
-### Interpretation
+```{python}
+query = """
+SELECT
+    system_type,
+    COUNT(*) AS observations,
+    COUNT(DISTINCT country) AS countries,
+    ROUND(AVG(primary_enrollment), 2) AS avg_primary_enrollment,
+    ROUND(AVG(secondary_enrollment), 2) AS avg_secondary_enrollment,
+    ROUND(AVG(tertiary_enrollment), 2) AS avg_tertiary_enrollment
+FROM education
+GROUP BY system_type
+ORDER BY avg_secondary_enrollment DESC;
+"""
 
-Interpret your results in the context of your research questions:
+summary_by_system = pd.read_sql_query(query, conn)
+summary_by_system
+```
 
-- **Finding 1:** Explain what this result means and why it is important
-- **Finding 2:** Connect this finding to your research objectives
-- **Finding 3:** Discuss any unexpected or noteworthy patterns
+```{python}
+query = """
+SELECT
+    system_type,
+    MIN(year) AS first_year,
+    MAX(year) AS last_year,
+    ROUND(AVG(primary_enrollment), 2) AS mean_primary,
+    ROUND(AVG(secondary_enrollment), 2) AS mean_secondary,
+    ROUND(AVG(tertiary_enrollment), 2) AS mean_tertiary
+FROM education
+GROUP BY system_type;
+"""
 
----
+pd.read_sql_query(query, conn)
+```
 
-## Conclusion
+# Exploratory Analysis
 
-Summarize your main findings and their implications. Address:
+## Enrollment Distribution by Government System Type
 
-1. **Summary of Key Results:** Briefly restate your main findings
-2. **Contribution:** How does this analysis contribute to understanding your chosen topic?
-3. **Limitations:** What are the limitations of your analysis? (data quality, time period, countries covered, etc.)
-4. **Future Research:** What questions remain unanswered? What would you investigate next?
+To compare education enrollment across government types, the first figure uses boxplots for primary, secondary, and tertiary enrollment.
 
----
+```{python}
+# Convert to long format for plotting
+plot_df = df.melt(
+    id_vars=["country", "year", "system_type"],
+    value_vars=["primary_enrollment", "secondary_enrollment", "tertiary_enrollment"],
+    var_name="education_level",
+    value_name="enrollment"
+)
 
-## References
+plot_df["education_level"] = plot_df["education_level"].replace({
+    "primary_enrollment": "Primary",
+    "secondary_enrollment": "Secondary",
+    "tertiary_enrollment": "Tertiary"
+})
 
-Add your references here in a consistent format (APA, Chicago, or your preferred style).
+# Drop missing values
+plot_df = plot_df.dropna(subset=["enrollment"])
 
-- World Bank. (2023). World Development Indicators. Retrieved from https://data.worldbank.org/products/wdi
-- Add more references as needed
+plt.figure(figsize=(12, 7))
+sns.boxplot(
+    data=plot_df,
+    x="education_level",
+    y="enrollment",
+    hue="system_type",
+    order=["Primary", "Secondary", "Tertiary"],
+    hue_order=["semi-presidential", "presidential", "parliamentary"]
+)
+
+plt.title("Education Enrollment by Government Type in Africa")
+plt.xlabel("Education Level")
+plt.ylabel("Enrollment (%)")
+plt.legend(title="system_type")
+plt.tight_layout()
+plt.show()
+```
+
+The boxplot shows that primary education enrollment is high across all three government system types. This suggests that primary education access has become relatively widespread across the countries included in the dataset. However, secondary and tertiary enrollment show much larger differences.
+
+Parliamentary systems appear to have higher median secondary and tertiary enrollment than presidential systems. Semi-presidential systems also perform relatively well in some years, but they appear more variable. Presidential systems tend to have lower secondary and tertiary enrollment, especially at the tertiary level.
+
+# Time Trends Since 2010
+
+Because education systems change over time, the next figures examine average enrollment trends by government type from 2010 onward.
+
+```{python}
+recent_df = df[df["year"] >= 2010].copy()
+
+trend_df = recent_df.groupby(["year", "system_type"], as_index=False).agg(
+    primary_enrollment=("primary_enrollment", "mean"),
+    secondary_enrollment=("secondary_enrollment", "mean"),
+    tertiary_enrollment=("tertiary_enrollment", "mean")
+)
+
+trend_df.head()
+```
+
+## Primary Enrollment Trends
+
+```{python}
+plt.figure(figsize=(12, 7))
+
+sns.lineplot(
+    data=trend_df,
+    x="year",
+    y="primary_enrollment",
+    hue="system_type",
+    marker="o"
+)
+
+plt.title("Primary Education Enrollment Trends by Government Type")
+plt.xlabel("Year")
+plt.ylabel("Enrollment (%)")
+plt.legend(title="system_type")
+plt.tight_layout()
+plt.show()
+```
+
+Primary enrollment remains high across all government system types. Most values are close to or above 100%, which is possible because the variable is a gross enrollment rate. Parliamentary systems show a decline over time, while presidential and semi-presidential systems fluctuate. These fluctuations may reflect real changes, data availability, or the changing composition of country-year observations.
+
+## Secondary Enrollment Trends
+
+```{python}
+plt.figure(figsize=(12, 7))
+
+sns.lineplot(
+    data=trend_df,
+    x="year",
+    y="secondary_enrollment",
+    hue="system_type",
+    marker="o"
+)
+
+plt.title("Secondary Education Enrollment Trends by Government Type")
+plt.xlabel("Year")
+plt.ylabel("Enrollment (%)")
+plt.legend(title="system_type")
+plt.tight_layout()
+plt.show()
+```
+
+Secondary enrollment shows a clearer separation between system types. Parliamentary systems generally have the highest average secondary enrollment across the period. Presidential systems tend to have the lowest average secondary enrollment. Semi-presidential systems fall between the two for many years, although they show more volatility.
+
+This pattern suggests that differences in education enrollment are more visible at the secondary level than at the primary level. Primary enrollment may be closer to universal in many countries, while secondary education may still depend more strongly on institutional capacity, public investment, and economic conditions.
+
+## Tertiary Enrollment Trends
+
+```{python}
+plt.figure(figsize=(12, 7))
+
+sns.lineplot(
+    data=trend_df,
+    x="year",
+    y="tertiary_enrollment",
+    hue="system_type",
+    marker="o"
+)
+
+plt.title("Tertiary Education Enrollment Trends by Government Type")
+plt.xlabel("Year")
+plt.ylabel("Enrollment (%)")
+plt.legend(title="system_type")
+plt.tight_layout()
+plt.show()
+```
+
+Tertiary enrollment is much lower than primary and secondary enrollment across all government system types. However, parliamentary and semi-presidential systems tend to have higher tertiary enrollment than presidential systems.
+
+The gap is especially clear after 2015. Parliamentary systems show a steady increase in tertiary enrollment, while presidential systems remain much lower. Semi-presidential systems increase sharply in later years, although this pattern should be interpreted carefully because fewer countries and more missing data may affect the average.
+
+# Additional Summary Tables
+
+```{python}
+# Average enrollment by government system type since 2010
+recent_summary = recent_df.groupby("system_type").agg(
+    countries=("country", "nunique"),
+    observations=("country", "count"),
+    avg_primary=("primary_enrollment", "mean"),
+    avg_secondary=("secondary_enrollment", "mean"),
+    avg_tertiary=("tertiary_enrollment", "mean")
+).round(2).reset_index()
+
+recent_summary
+```
+
+```{python}
+# Most recent available average by system type
+latest_year = int(df["year"].max())
+
+latest_df = df[df["year"] == latest_year]
+
+latest_summary = latest_df.groupby("system_type").agg(
+    countries=("country", "nunique"),
+    avg_primary=("primary_enrollment", "mean"),
+    avg_secondary=("secondary_enrollment", "mean"),
+    avg_tertiary=("tertiary_enrollment", "mean")
+).round(2).reset_index()
+
+latest_year, latest_summary
+```
+
+# Results
+
+The analysis shows three main findings.
+
+First, primary education enrollment is high across all government system types. This suggests that primary schooling has expanded broadly across African countries, regardless of whether a country has a presidential, parliamentary, or semi-presidential system.
+
+Second, larger differences appear at the secondary education level. Parliamentary systems generally have higher secondary enrollment than presidential systems. Semi-presidential systems often fall between parliamentary and presidential systems, though they show greater year-to-year variation.
+
+Third, tertiary enrollment is the lowest of the three education levels, but it shows the clearest long-term difference between government types. Parliamentary and semi-presidential systems generally have higher tertiary enrollment than presidential systems. Presidential systems remain lower throughout most of the observed period.
+
+Overall, the results suggest that government system type is associated with differences in education enrollment, especially beyond the primary level. However, this relationship should not be interpreted as causal. Government type may be correlated with other important factors, including income level, colonial history, political stability, public spending, and state capacity.
+
+# Limitations
+
+This project has several limitations.
+
+First, the analysis is descriptive and does not prove that government system type causes higher or lower education enrollment. The observed differences may be influenced by income, region, population size, conflict, or historical factors.
+
+Second, the dataset contains missing values, especially for secondary and tertiary education. Because tertiary education has the least complete data, trends at that level should be interpreted cautiously.
+
+Third, the government system categories are simplified. Many countries have more specific institutional arrangements, such as federal presidential republics, unitary presidential republics, constitutional monarchies, or hybrid systems. Grouping them into only three categories makes the analysis easier to interpret, but it may hide important variation.
+
+Fourth, the analysis uses gross enrollment rates. Gross enrollment can exceed 100%, so it should not be interpreted as the exact percentage of children of the official age group enrolled in school.
+
+# Conclusion
+
+This report examined education enrollment in African countries by government system type. The analysis found that primary enrollment is high across all systems, but secondary and tertiary enrollment differ more strongly by government type.
+
+Parliamentary systems generally show higher secondary and tertiary enrollment than presidential systems. Semi-presidential systems also show relatively strong outcomes in some years, especially for tertiary education, but with more volatility.
+
+The findings suggest that political institutions may be connected to educational outcomes, particularly at higher levels of education. However, future research should include additional controls such as income group, public education spending, conflict status, and regional effects before making stronger causal claims.
+
+# Group Contributions
+
+The project repository was managed using GitHub. Contributions were evaluated using GitHub commit history, additions, deletions, and each group member’s role in the project.
+
+```{bash}
+git shortlog -sn --all
+```
+
+```{bash}
+git log --all --format='%aN' | sort -u | while read name; do
+  echo "Author: $name"
+  git log --all --author="$name" --pretty=tformat: --numstat | \
+    awk '{ added += $1; deleted += $2 } END { print "Lines added:", added, "Lines deleted:", deleted, "Net lines:", added - deleted }'
+  echo
+done
+```
+
+# References
+
+World Bank. (2024). *World Development Indicators*. World Bank.
+
+Project dataset: `education_africa_cleaned.csv`.
+
+Project codebook: `CODEBOOK.md`.
+
+Project cleaning script: `clean_joined_data.py`.
